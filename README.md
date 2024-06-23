@@ -22,15 +22,14 @@ The proxy server listens on the specified `PROXY_PORT` and forwards all connecti
 
 ```bash
 docker run -d \
-    -e MONGO_USER=your_mongo_user \
-    -e MONGO_PASS=your_mongo_pass \
+    --name Mongo_Portal \
     -e MONGO_HOST=your_mongo_host \
     -e MONGO_PORT=27017 \
     -e PROXY_PORT=2222 \
     -e DB_NAME=logs \
     -e COLLECTION_NAME=connections \
     -p 2222:2222 \
-    mongo-proxy-portal
+    davinci19/mongo-proxy-portal:latest
 ```
 
 ### Using Docker Compose
@@ -42,10 +41,9 @@ version: '3.8'
 
 services:
   mongodb-proxy:
-    image: mongo-proxy-portal
+    image: davinci19/mongo-proxy-portal:latest
+    container_name: Mongo_Portal
     environment:
-      MONGO_USER: your_mongo_user
-      MONGO_PASS: your_mongo_pass
       MONGO_HOST: your_mongo_host
       MONGO_PORT: 27017
       PROXY_PORT: 2222
