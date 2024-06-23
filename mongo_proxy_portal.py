@@ -1,18 +1,15 @@
 import asyncio
 import logging
+import os
 import motor.motor_asyncio
 from asyncio import StreamReader, StreamWriter
 from datetime import datetime
 from urllib.parse import urlparse
 
-# Remove the hardcoded mongo_user and mongo_pass
-# mongo_user = os.getenv('MONGO_USER', 'default_user')
-# mongo_pass = os.getenv('MONGO_PASS', 'default_pass')
 mongo_host = os.getenv('MONGO_HOST', 'localhost')
 mongo_port = int(os.getenv('MONGO_PORT', 27017))
 proxy_port = int(os.getenv('PROXY_PORT', 2222))
 
-# Initial client is not set here
 client = None
 
 db_name = os.getenv('DB_NAME', 'logs')
@@ -61,13 +58,12 @@ async def forward_data(reader: StreamReader, writer: StreamWriter):
         await writer.wait_closed()
 
 async def handle_client(client_reader: StreamReader, client_writer: StreamWriter):
-    global client  # Use the global client
+    global client
     peername = client_writer.get_extra_info('peername')
     if peername:
         ip = peername[0]
         await log_connection(ip)
-    
-    # Read the MongoDB URI from the client
+
     try:
         uri_data = await client_reader.read(4096)
         uri = uri_data.decode().strip()
@@ -75,7 +71,6 @@ async def handle_client(client_reader: StreamReader, client_writer: StreamWriter
         mongo_user = parsed_uri.username
         mongo_pass = parsed_uri.password
 
-        # Create a new MongoDB client using the provided URI
         client = motor.motor_asyncio.AsyncIOMotorClient(uri, maxPoolSize=100)
         await ensure_collection()
         

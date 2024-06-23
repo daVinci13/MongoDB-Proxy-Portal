@@ -8,8 +8,6 @@ The proxy server listens on the specified `PROXY_PORT` and forwards all connecti
 
 ## Environment Variables
 
-- **`MONGO_USER`**: MongoDB username
-- **`MONGO_PASS`**: MongoDB password
 - **`MONGO_HOST`**: MongoDB host (default: `localhost`)
 - **`MONGO_PORT`**: MongoDB port (default: `27017`)
 - **`PROXY_PORT`**: Proxy port (default: `2222`)
@@ -29,7 +27,7 @@ docker run -d \
     -e DB_NAME=logs \
     -e COLLECTION_NAME=connections \
     -p 2222:2222 \
-    davinci19/mongo-proxy-portal:latest
+    davinci19/mongodb-proxy-portal:latest
 ```
 
 ### Using Docker Compose
