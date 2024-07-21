@@ -1,7 +1,5 @@
 import os
 import asyncio
-from aiohttp import web
-import motor.motor_asyncio
 from asyncio import StreamReader, StreamWriter
 
 async def forward_data(reader: StreamReader, writer: StreamWriter):
@@ -32,6 +30,8 @@ async def handle_client(client_reader: StreamReader, client_writer: StreamWriter
         await asyncio.gather(forward_client_to_mongo, forward_mongo_to_client)
     except Exception as e:
         print(f"Error handling client {peername}: {e}")
+        import traceback
+        print("".join(traceback.format_exception(None, e, e.__traceback__)))
     finally:
         client_writer.close()
         await client_writer.wait_closed()
@@ -59,6 +59,7 @@ if __name__ == '__main__':
     try:
         loop.run_until_complete(tcp_task)
     except KeyboardInterrupt:
-        pass
+        print("Server interrupted by user")
     finally:
         loop.close()
+        print("Event loop closed")
