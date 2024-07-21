@@ -1,7 +1,7 @@
 import os
 import asyncio
+import socket
 from asyncio import StreamReader, StreamWriter
-
 
 async def forward_data(reader: StreamReader, writer: StreamWriter):
     try:
@@ -22,8 +22,12 @@ async def handle_client(client_reader: StreamReader, client_writer: StreamWriter
     print(f"Connection from {peername}")
 
     try:
-        mongo_reader, mongo_writer = await asyncio.open_connection(mongo_host, mongo_port)
-        print(f"Connected to MongoDB at {mongo_host}:{mongo_port}")
+        # Resolve MongoDB host to IP address
+        mongo_ip = socket.gethostbyname(mongo_host)
+        print(f"Resolved MongoDB host {mongo_host} to IP {mongo_ip}")
+
+        mongo_reader, mongo_writer = await asyncio.open_connection(mongo_ip, mongo_port)
+        print(f"Connected to MongoDB at {mongo_ip}:{mongo_port}")
 
         forward_client_to_mongo = forward_data(client_reader, mongo_writer)
         forward_mongo_to_client = forward_data(mongo_reader, client_writer)
@@ -55,8 +59,10 @@ if __name__ == '__main__':
     loop = asyncio.get_event_loop()
 
     # Start TCP proxy server
+    tcp_task = loop.create_task(tcp_server(mongo_host, mongo_port))
+
     try:
-        loop.run_until_complete(tcp_server(mongo_host, mongo_port))
+        loop.run_until_complete(tcp_task)
     except KeyboardInterrupt:
         print("Server interrupted by user")
     finally:
