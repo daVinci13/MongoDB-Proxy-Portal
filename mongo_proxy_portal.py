@@ -4,7 +4,6 @@ import logging
 from aiohttp import web
 import motor.motor_asyncio
 from datetime import datetime
-from urllib.parse import urlparse
 from asyncio import StreamReader, StreamWriter
 
 db_name = os.getenv('DB_NAME', 'logs')
@@ -112,4 +111,5 @@ if __name__ == '__main__':
         pass
     finally:
         loop.close()
+
 
