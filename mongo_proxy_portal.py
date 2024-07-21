@@ -54,10 +54,8 @@ if __name__ == '__main__':
     loop = asyncio.get_event_loop()
 
     # Start TCP proxy server
-    tcp_task = loop.create_task(tcp_server(mongo_host, mongo_port))
-
     try:
-        loop.run_until_complete(tcp_task)
+        loop.run_until_complete(tcp_server(mongo_host, mongo_port))
     except KeyboardInterrupt:
         print("Server interrupted by user")
     finally:
