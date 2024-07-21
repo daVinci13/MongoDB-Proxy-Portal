@@ -30,4 +30,3 @@ if __name__ == '__main__':
 
     app = asyncio.run(create_app(mongo_host, mongo_port))
     web.run_app(app, port=27000)
-
