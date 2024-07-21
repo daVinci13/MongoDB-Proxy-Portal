@@ -29,6 +29,9 @@ jobs:
             type=ref,event=branch,branch=main,latest=true
             type=semver,pattern={{version}}
 
+      - name: Print generated tags (for debugging)
+        run: echo ${{ steps.meta.outputs.tags }}
+
       - name: Login to Docker registry
         uses: docker/login-action@v3
         with:

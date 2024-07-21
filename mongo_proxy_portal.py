@@ -40,11 +40,11 @@ async def handle_client(client_reader: StreamReader, client_writer: StreamWriter
 async def tcp_server(mongo_host, mongo_port):
     server = await asyncio.start_server(
         lambda r, w: handle_client(r, w, mongo_host, mongo_port),
-        '0.0.0.0', 27000
+        '0.0.0.0', 27017
     )
 
     async with server:
-        print(f"Proxy server listening on port 27000, forwarding to {mongo_host}:{mongo_port}")
+        print(f"Proxy server listening on port 27017, forwarding to {mongo_host}:{mongo_port}")
         await server.serve_forever()
 
 if __name__ == '__main__':
